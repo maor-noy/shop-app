@@ -14,7 +14,7 @@ export default function RootLayout() {
             {/* The header will be shown and the title will be "Categories" */}
             <Stack.Screen 
                 name="categories" 
-                options={{ headerShown: true, title: 'Categories' }} 
+                options={{ headerShown: false, title: 'Categories' }} 
             />
 
             {/* Define the "Product" screen in the stack */}

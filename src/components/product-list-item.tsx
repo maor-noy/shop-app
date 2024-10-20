@@ -2,6 +2,7 @@ import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Product } from '../../assets/types/product';
 import { Link } from 'expo-router';
 
+//a component that displays a product in a list
 export const ProductListItem = ({product}: {product: Product}) => {
   return (
     <Link asChild href={`/product/${product.slug}`}>

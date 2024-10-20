@@ -9,10 +9,12 @@ const Home = () => {
   return (
     <View> 
       <FlatList 
+      //run on each item in the array of products and tranform it into a ProductListItem
         data={PRODUCTS} 
         renderItem={({item})=> <ProductListItem product={item} />}
         keyExtractor={item => item.id.toString()}
         numColumns={2}
+        //add a header to the list
         ListHeaderComponent={ListHeader}
         contentContainerStyle={styles.flatListContent }
         columnWrapperStyle={styles.flatListColumn}
@@ -24,6 +26,7 @@ const Home = () => {
 
 export default Home
 
+//styles for the flatlist
 const styles = StyleSheet.create({
   flatList: {
     paddingHorizontal: 10,

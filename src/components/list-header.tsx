@@ -10,10 +10,14 @@ import {
   View,
 } from 'react-native';
 import { CATEGORIES } from '../../assets/categories';
+import { useCartStore } from '../store/card-store';
 
 export const ListHeader = ()=>{
+  const {getItemCount} = useCartStore();
+
   return (
     <View style={[styles.headerContainer]}>
+      {/* Header */}
       <View style={styles.headerTop}>
         <View style={styles.headerLeft}>
           <View style={styles.avatarContainer}>
@@ -36,7 +40,7 @@ export const ListHeader = ()=>{
                     style={{marginRight: 15, opacity: pressed? 0.5: 1}}
                   />
                   <View style={styles.badgeContainer}>
-                    <Text style={styles.badgeText}>{1}</Text>
+                    <Text style={styles.badgeText}>{getItemCount()}</Text>
                   </View>
                 </View>
               )}
@@ -46,9 +50,9 @@ export const ListHeader = ()=>{
           <FontAwesome name='sign-out' size={25} color='red'/>
         </TouchableOpacity>
       </View>
-    </View>
+      </View>
 
-
+      {/* Hero */}
       <View style={styles.heroContainer}>
         <Image 
           source={require('../../assets/images/hero.png')}
@@ -56,7 +60,7 @@ export const ListHeader = ()=>{
         />
       </View>
 
-
+      {/* Categories */}
       <View style={styles.categoriesContainer}>
         <Text style={styles.sectionTitle}>Categories</Text>
         <FlatList
