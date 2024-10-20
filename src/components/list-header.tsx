@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 import { CATEGORIES } from '../../assets/categories';
-import { useCartStore } from '../store/card-store';
+import { useCartStore } from '../store/cart-store';
 
 export const ListHeader = ()=>{
   const {getItemCount} = useCartStore();
