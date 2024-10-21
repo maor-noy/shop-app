@@ -2,6 +2,10 @@ import { View, Text, StyleSheet , ImageBackground, TextInput ,TouchableOpacity} 
 import {useForm, Controller} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import * as zod from 'zod';
+import { supabase } from "../lib/supabase";
+import { Toast } from "react-native-toast-notifications";
+import { Redirect } from "expo-router";
+import { useAuth } from "../providers/auth-provider";
 
 const authSchema = zod.object({
     email: zod.string().email({message: 'Invalid email'}), 
@@ -9,6 +13,10 @@ const authSchema = zod.object({
 });
 
 export default function Auth() {
+    const {session} = useAuth();
+
+    if(session) return <Redirect  href='/'/>
+
     const {control, handleSubmit, formState} = useForm({
         resolver: zodResolver(authSchema),
         defaultValues: {
@@ -17,86 +25,108 @@ export default function Auth() {
         }
     });
 
-    const signIn = (data: zod.infer<typeof authSchema>) => {
-        console.log(data);
+    const signIn = async (data: zod.infer<typeof authSchema>) => {
+        const {error} = await supabase.auth.signInWithPassword(data);
+
+        if(error) {
+            alert(error.message);
+        }else{
+            Toast.show('Signed in successfully', {
+                type: 'success',
+                placement: 'top',
+                duration: 1500,
+            });
+        }
     }
 
-    const signUp = (data: zod.infer<typeof authSchema>) => {
-        console.log(data);
+    const signUp = async (data: zod.infer<typeof authSchema>) => {
+        const {error} = await supabase.auth.signUp(data);
+
+        if(error) {
+            alert(error.message);
+        }else{
+            Toast.show('Signed up successfully', {
+                type: 'success',
+                placement: 'top',
+                duration: 1500,
+            });
+        }
     }
 
     return (
-        <ImageBackground 
-            source={{uri: 'https://images.pexels.com/photos/682933/pexels-photo-682933.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'}} 
-            style={styles.backgroundImage}>
-                <View style={styles.overlay}>
-                    <View style={styles.container}>
-                        <Text style={styles.title}>Welcome</Text>
-                        <Text style={styles.subtitle}>Please Authenticte to continue</Text>
-                    </View>
-                    <Controller
-                        control={control}
-                        render={({
-                            field: {onChange, onBlur, value},
-                            fieldState: {error}
+        <ImageBackground
+            source={{uri: 'https://images.pexels.com/photos/682933/pexels-photo-682933.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'}}
+            style={styles.backgroundImage}
+        >
+            <View style={styles.overlay} />
+
+            <View style={styles.container}>
+                <Text style={styles.title}>Welcome</Text>
+                <Text style={styles.subtitle}>Please Authenticate to continue</Text>
+
+                <Controller
+                    control={control}
+                    name='email'
+                    render={({
+                        field: { value, onChange, onBlur },
+                        fieldState: { error },
                         }) => (
                             <>
-                            <TextInput 
-                                style={styles.input}
-                                placeholder="Email"
-                                onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value}
-                                placeholderTextColor="#aaa"
-                                autoCapitalize="none"
-                                editable={!formState.isSubmitting}
-                            />
+                                <TextInput
+                                    placeholder='Email'
+                                    style={styles.input}
+                                    value={value}
+                                    onChangeText={onChange}
+                                    onBlur={onBlur}
+                                    placeholderTextColor='#aaa'
+                                    autoCapitalize='none'
+                                    editable={!formState.isSubmitting}
+                                />
                                 {error && <Text style={styles.error}>{error.message}</Text>}
                             </>
                         )}
-                        name="email"
-                    />
+                />
 
-                    <Controller
-                        control={control}
-                        render={({
-                            field: {onChange, onBlur, value},
-                            fieldState: {error}
+                <Controller
+                    control={control}
+                    name='password'
+                    render={({
+                        field: { value, onChange, onBlur },
+                        fieldState: { error },
                         }) => (
                             <>
-                            <TextInput 
-                                style={styles.input}
-                                placeholder="Password"
-                                onBlur={onBlur}
-                                onChangeText={onChange}
-                                secureTextEntry
-                                value={value}
-                                placeholderTextColor="#aaa"
-                                autoCapitalize="none"
-                                editable={!formState.isSubmitting}
-                            />
+                                <TextInput
+                                    placeholder='Password'
+                                    style={styles.input}
+                                    value={value}
+                                    onChangeText={onChange}
+                                    onBlur={onBlur}
+                                    secureTextEntry
+                                    placeholderTextColor='#aaa'
+                                    autoCapitalize='none'
+                                    editable={!formState.isSubmitting}
+                                />
                                 {error && <Text style={styles.error}>{error.message}</Text>}
                             </>
                         )}
-                        name="password"
                     />
 
-                    <TouchableOpacity 
-                        style={styles.button}
-                        onPress={handleSubmit(signIn)}
-                        disabled={formState.isSubmitting}
-                    >
-                        <Text style={styles.buttonText}>Sign In</Text>
-                    </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={handleSubmit(signIn)}
+                    disabled={formState.isSubmitting}
+                >
+                    <Text style={styles.buttonText}>Sign In</Text>
+                </TouchableOpacity>
 
-                    <TouchableOpacity 
-                        style={[styles.button, styles.signUpButton]}
-                        onPress={handleSubmit(signUp)}
-                        disabled={formState.isSubmitting}
-                    >
-                        <Text style={styles.buttonText}>Sign Up</Text>
-                    </TouchableOpacity>
-                </View>
+                <TouchableOpacity
+                    style={[styles.button, styles.signUpButton]}
+                    onPress={handleSubmit(signUp)}
+                    disabled={formState.isSubmitting}
+                >
+                    <Text style={styles.buttonText}>Sign Up</Text>
+                </TouchableOpacity>
+            </View>
         </ImageBackground>
     );
 }
