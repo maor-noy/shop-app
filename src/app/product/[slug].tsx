@@ -1,25 +1,27 @@
 import { Redirect, Stack, useLocalSearchParams } from 'expo-router'
-import { StyleSheet, Text, View , Image, FlatList, TouchableOpacity} from 'react-native'
+import { StyleSheet, Text, View , Image, FlatList, TouchableOpacity, ActivityIndicator} from 'react-native'
 import { useToast } from 'react-native-toast-notifications'
-import { PRODUCTS } from '../../../assets/products'
 import { useCartStore } from '../../store/cart-store'
 import { useState } from 'react'
+import { getProduct } from '../../api/api'
 
 const ProductDetails = () => {
     const {slug} = useLocalSearchParams<{slug: string}>();
     const toast = useToast();
 
-    const product = PRODUCTS.find((p)=>p.slug === slug);
-
-    if(!product) return <Redirect href="/404"/>
+    const {data: product, error, isLoading} = getProduct(slug);
 
     const {items, addItem, increaseItem, decreaseItem} = useCartStore();
 
-    const cartItem = items.find((i)=>i.id === product.id);
-
+    const cartItem = items.find((i)=>i.id === product?.id);
+    
     const initialQuantity = cartItem?.quantity || 1;
-
+    
     const [quantity, setQuantity] = useState(initialQuantity);
+
+    if(isLoading) return <ActivityIndicator/>
+    if(error) return <Text>Error: {error.message}</Text>
+    if(!product) return <Redirect href="/404"/>
 
     const incresesQuantity = ()=>{
         if(quantity<product.maxQuantity){
@@ -62,7 +64,7 @@ const ProductDetails = () => {
     return (
         <View style={styles.container}>
             <Stack.Screen options={{title: product.title}}/>
-            <Image source={product.heroImage} style={styles.heroImage}/>
+            <Image source={{uri: product.heroImage}} style={styles.heroImage}/>
 
             <View style={{padding:16, flex:1}}>
                 <Text style={styles.slug}>Slug: {product.slug}</Text>
@@ -75,7 +77,7 @@ const ProductDetails = () => {
                     data={product.imagesUrl}
                     keyExtractor={(item, index)=>index.toString()}
                     renderItem={({item})=>(
-                        <Image source={item} style={styles.image}/>
+                        <Image source={{uri: item}} style={styles.image}/>
                     )}
                     horizontal
                     showsHorizontalScrollIndicator={false}
