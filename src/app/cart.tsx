@@ -7,7 +7,8 @@ type CartItemType = {
     title: string;
     price: number;
     quantity: number;
-    image: any;
+    heroImage: string;
+    maxQuantity: number;
 }
 
 type CartItemProps = {
@@ -20,7 +21,7 @@ type CartItemProps = {
 const CartItem = ({item, onIncrement, onDecrement, onRemove}: CartItemProps) => {
     return (
         <View style={styles.cartItem}>
-            <Image source={item.image} style={styles.itemImage} />
+            <Image source={{uri: item.heroImage}} style={styles.itemImage} />
             <View style={styles.itemDetails}>
                 <Text style={styles.itemTitle}>{item.title}</Text>
                 <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
@@ -64,12 +65,12 @@ export default function Cart() {
                 data={items}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
-                    <CartItem 
-                        item={item}    
-                        onRemove={removeItem} 
-                        onDecrement={decreaseItem} 
-                        onIncrement={increaseItem}
-                    />
+                  <CartItem 
+                      item={item} 
+                      onRemove={removeItem} 
+                      onDecrement={decreaseItem} 
+                      onIncrement={increaseItem}
+                  />
                 )}
                 contentContainerStyle={styles.cartList}
             />

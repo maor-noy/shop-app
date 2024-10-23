@@ -1,13 +1,13 @@
 import { create } from "zustand"; 
-import { PRODUCTS } from "../../assets/products";
 
 // Define the types for the cart item, cart state, and the cart store
 type CartItemType = {
     id:number;
     title:string;
     price:number;
-    image: any;
+    heroImage: string;
     quantity: number;
+    maxQuantity: number;
 };
 
 // Define the cart state
@@ -33,7 +33,7 @@ export const useCartStore = create<CartState>((set, get) => ({
             set((state) => ({
                 items: state.items.map((i) => (i.id === item.id) ? { 
                     ...i,
-                    quantity: Math.min(i.quantity + item.quantity, PRODUCTS.find(p=>p.id===i.id)?.maxQuantity || i.quantity),
+                    quantity: Math.min(i.quantity + item.quantity, i.maxQuantity),
                 } : i
                 ),
             }));
@@ -50,12 +50,9 @@ export const useCartStore = create<CartState>((set, get) => ({
 
     //increase the quantity of an item in the cart based on the id
     increaseItem: (id:number)=>set(state=>{
-        const product = PRODUCTS.find(item=>item.id===id);
-
-        if(!product) return state;
 
         return{
-            items: state.items.map(item=>item.id===id && item.quantity<product.maxQuantity? {
+            items: state.items.map(item=>item.id===id && item.quantity<item.maxQuantity? {
                 ...item,
                 quantity: item.quantity+1,
             } : item),
