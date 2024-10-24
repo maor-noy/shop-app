@@ -19,6 +19,7 @@ type CartState = {
     decreaseItem: (id: number) => void;
     getTotalPrice: ()=>string;
     getItemCount: ()=>number;
+    resetCart: ()=>void;
 };
 
 const initialCartItems: CartItemType[] = [];
@@ -72,4 +73,6 @@ export const useCartStore = create<CartState>((set, get) => ({
     getItemCount: ()=>{
         return get().items.reduce((total, item)=>total+item.quantity, 0);
     },
+
+    resetCart: ()=>set({items: initialCartItems}),
 }));

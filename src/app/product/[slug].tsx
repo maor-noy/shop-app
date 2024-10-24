@@ -15,7 +15,7 @@ const ProductDetails = () => {
 
     const cartItem = items.find((i)=>i.id === product?.id);
     
-    const initialQuantity = cartItem?.quantity || 1;
+    const initialQuantity = cartItem?.quantity || 0;
     
     const [quantity, setQuantity] = useState(initialQuantity);
 
@@ -68,7 +68,6 @@ const ProductDetails = () => {
             <Image source={{uri: product.heroImage}} style={styles.heroImage}/>
 
             <View style={{padding:16, flex:1}}>
-                <Text style={styles.slug}>Slug: {product.slug}</Text>
                 <View style={styles.priceContainer}>
                     <Text style={styles.price}>Unit price: ${product.price.toFixed(2)}</Text>
                     <Text style={styles.price}>Total price: ${totalPrice}</Text>
@@ -137,11 +136,6 @@ const styles = StyleSheet.create({
       fontSize: 24,
       fontWeight: 'bold',
       marginVertical: 8,
-    },
-    slug: {
-      fontSize: 18,
-      color: '#555',
-      marginBottom: 16,
     },
     priceContainer: {
       flexDirection: 'row',
