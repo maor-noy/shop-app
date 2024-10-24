@@ -75,7 +75,7 @@ const styles: { [key: string]: any } = StyleSheet.create({
     flex: 1,
   },
   orderItem: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: 'bold',
   },
   orderDetails: {
