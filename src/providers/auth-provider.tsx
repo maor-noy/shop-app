@@ -15,7 +15,17 @@ const AuthContext = createContext<AuthData>({
 
 export default function AuthProvider({children}: PropsWithChildren) {
     const [session, setSession] = useState<Session | null>(null);
-    const [user, setUser] = useState(null);
+    type User = {
+        avatar_url: string;
+        created_at: string | null;
+        email: string;
+        expo_notification_token: string | null;
+        id: string;
+        stripe_customer_id: string | null;
+        type: string | null;
+    };
+
+    const [user, setUser] = useState<User | null>(null);
     const [mounting, setMounting] = useState(true);
 
     useEffect(() => {

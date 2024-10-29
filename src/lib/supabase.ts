@@ -5,8 +5,8 @@ import * as aesjs from 'aes-js';
 import 'react-native-get-random-values';
 import { Database } from "../types/database.types";
 
-const supabaseUrl = 'https://wvykogbfcevccrrlsiya.supabase.co'
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind2eWtvZ2JmY2V2Y2NycmxzaXlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk0NjUzMzcsImV4cCI6MjA0NTA0MTMzN30.WkcbMW-hi9J4qwnPtYFWYUBgUOI6vNERFe_kOE4NDsQ'
+const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
 
 
 // As Expo's SecureStore does not support values larger than 2048
